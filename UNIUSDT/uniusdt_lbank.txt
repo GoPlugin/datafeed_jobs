@@ -1,0 +1,24 @@
+type = "fluxmonitor"
+schemaVersion = 1
+name = "UNI/USDT Flux Poll Timer + Idle Timer"
+forwardingAllowed = false
+maxTaskDuration = "30s"
+absoluteThreshold = 0
+contractAddress = "0x7C1E05d37894A090E3f6277775C740bd4DbCBFAf"
+drumbeatEnabled = false
+evmChainID = "50"
+idleTimerPeriod = "30m0s"
+idleTimerDisabled = false
+pollTimerPeriod = "15m0s"
+pollTimerDisabled = false
+threshold = 0.14149999618530273
+observationSource = """
+    // data source 1
+    ds1 [type="http" method=GET url="https://api.lbkex.com/v2/ticker/24hr.do?symbol=uni_usdt"]
+    ds1_parse [type="jsonparse" path="data,0,ticker,latest"]
+    ds1_multiply     [type="multiply" input="$(ds1_parse)" times=10000000000000000]
+
+    ds1 -> ds1_parse -> ds1_multiply -> medianized_answer
+
+    medianized_answer [type=mean]
+"""

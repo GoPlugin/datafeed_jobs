@@ -1,0 +1,24 @@
+type = "fluxmonitor"
+schemaVersion = 1
+name = "XRP/USDT Flux Poll Timer + Idle Timer"
+forwardingAllowed = false
+maxTaskDuration = "30s"
+absoluteThreshold = 0
+contractAddress = "0xE1653a997363B5082C8240311BFe29F184dFad91"
+drumbeatEnabled = false
+evmChainID = "50"
+idleTimerPeriod = "30m0s"
+idleTimerDisabled = false
+pollTimerPeriod = "15m0s"
+pollTimerDisabled = false
+threshold = 0.4605
+observationSource = """
+    // data source 1
+    ds1 [type="http" method=GET url="https://min-api.cryptocompare.com/data/price?fsym=XRP&tsyms=USDT"]
+    ds1_parse [type="jsonparse" path="USDT"]
+    ds1_multiply     [type="multiply" input="$(ds1_parse)" times=10000000000000000]
+
+    ds1 -> ds1_parse -> ds1_multiply -> medianized_answer
+
+    medianized_answer [type=mean]
+"""

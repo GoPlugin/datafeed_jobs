@@ -1,0 +1,25 @@
+type = "fluxmonitor"
+schemaVersion = 1
+name = "BTC/USDT Flux Poll Timer + Idle Timer"
+forwardingAllowed = false
+maxTaskDuration = "30s"
+absoluteThreshold = 0
+contractAddress = "0x61588842DD47B09A7c44291f0E1484C4388d5998"
+drumbeatEnabled = false
+evmChainID = "50"
+idleTimerPeriod = "30m0s"
+idleTimerDisabled = false
+pollTimerPeriod = "15m0s"
+pollTimerDisabled = false
+threshold = 0.019130000844597816
+observationSource = """
+    // data source 1
+
+    ds1 [type="http" method=GET url="https://api.lbkex.com/v2/ticker/24hr.do?symbol=btc_usdt"]
+    ds1_parse [type="jsonparse" path="data,0,ticker,latest"]
+    ds1_multiply     [type="multiply" input="$(ds1_parse)" times=10000000000000000]
+
+    ds1 -> ds1_parse -> ds1_multiply -> medianized_answer
+
+    medianized_answer [type=mean]
+"""

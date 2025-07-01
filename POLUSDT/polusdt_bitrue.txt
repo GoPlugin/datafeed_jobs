@@ -1,0 +1,24 @@
+type = "fluxmonitor"
+schemaVersion = 1
+name = "POL/USDT Flux Poll Timer + Idle Timer"
+forwardingAllowed = false
+maxTaskDuration = "30s"
+absoluteThreshold = 0
+contractAddress = "0x3A5C5Cb8959d2026B7a711772027D00a26BEf574"
+drumbeatEnabled = false
+evmChainID = "50"
+idleTimerPeriod = "30m0s"
+idleTimerDisabled = false
+pollTimerPeriod = "15m0s"
+pollTimerDisabled = false
+threshold = 0.5431
+observationSource = """
+    // data source 1
+    ds1 [type="http" method=GET url="https://openapi.bitrue.com/api/v1/ticker/price?symbol=POLUSDT"]
+    ds1_parse [type="jsonparse" path="price"]
+    ds1_multiply     [type="multiply" input="$(ds1_parse)" times= 10000000000000000]
+
+    ds1 -> ds1_parse -> ds1_multiply -> medianized_answer
+
+    medianized_answer [type=mean]
+"""
